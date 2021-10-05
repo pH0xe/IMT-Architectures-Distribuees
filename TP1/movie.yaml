@@ -38,7 +38,7 @@ paths:
     get:
       tags:
       - developers
-      summary: get the full JSON database
+      summary: get the full JSON databases
       description: |
         Nothing to do
       operationId: get_json
