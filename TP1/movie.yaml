@@ -10,6 +10,9 @@ info:
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
   version: 1.0.0
 servers:
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/ph0xe2/MovieAPI/1.0.0
 - url: https://virtserver.swaggerhub.com/UE-archi-distribuees/Movie/1.0.0
   description: SwaggerHub API Auto Mocking
 tags:
@@ -28,7 +31,7 @@ paths:
       operationId: home
       responses:
         "200":
-          description: welcome message
+          description: welcome message and entry point for API
           content:
             text/html:
               schema:
@@ -48,7 +51,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieID'
+                $ref: '#/components/schemas/Movies'
   /movies/{movieid}:
     get:
       tags:
@@ -74,41 +77,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieItem'
+                $ref: '#/components/schemas/MovieItemDetail'
         "400":
           description: bad input parameter
-    post:
-      tags:
-      - admins
-      summary: add a movie item
-      description: Adds a movie to the system
-      operationId: create_movie
-      parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          maximum: 1
-          minimum: 1
-          type: string
-      requestBody:
-        description: Inventory item to add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MovieItem'
-      responses:
-        "200":
-          description: Movie created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MovieItem'
-        "409":
-          description: an existing item already exists
     delete:
       tags:
       - admins
@@ -131,7 +102,85 @@ paths:
           description: item deleted
         "400":
           description: ID not found
-  /titles:
+    put:
+      tags:
+        - admins
+      summary: Update any fields of a movie
+      description: Update any fields of a movie designated by movieid
+      operationId: update_movie
+      parameters:
+      - name: movieid
+        in: path
+        description: Movie ID.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      - name: title
+        in: query
+        description: new title for the movie.
+        required: false
+        style: form
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      - name: director
+        in: query
+        description: new director for the movie
+        required: false
+        style: form
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      - name: rate
+        in: query
+        description: New rate for the movie.
+        required: false
+        style: form
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: movie updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItemAddResponse'
+        "400":
+          description: ID not found
+  /movies:
+    post:
+      tags:
+      - admins
+      summary: add a movie item
+      description: Adds a movie to the system
+      operationId: create_movie
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieItem'
+      responses:
+        "200":
+          description: Movie created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItemAddResponse'
+        "409":
+          description: an existing item already exists
+  /moviesbytitle:
     get:
       tags:
       - developers
@@ -156,7 +205,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieItem'
+                $ref: '#/components/schemas/MovieItemDetail'
         "400":
           description: bad input parameter
   /movies/{movieid}/{rate}:
@@ -190,24 +239,25 @@ paths:
       responses:
         "200":
           description: rate updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItemAddResponse'
         "400":
           description: movie ID not found
 components:
   schemas:
-    MovieID:
-      required:
-      - id
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/MovieItem'
     MovieItem:
       required:
+      - id
       - director
       - rating
       - title
       type: object
       properties:
+        id:
+          type: string
+          example: a8034f44-aee4-44cf-b32c-74cf452aaaa
         title:
           type: string
           example: The Martian
@@ -217,3 +267,60 @@ components:
         director:
           type: string
           example: Paul McGuigan
+    Movies:
+      type: array
+      items:
+        $ref: '#/components/schemas/MovieItem'
+    MovieItemDetail:
+      required:
+      - id
+      - director
+      - rating
+      - title
+      type: object
+      properties:
+        id:
+          type: string
+          example: a8034f44-aee4-44cf-b32c-74cf452aaaa
+        title:
+          type: string
+          example: The Martian
+        rating:
+          type: string
+          example: "7"
+        director:
+          type: string
+          example: Paul McGuigan
+        deleteLink:
+          type: string
+          example: "[DELETE] /movies/{movieid}"
+        updateRateLink:
+          type: string
+          example: "[PUT] /movies/{movieid}/{rate}"
+        updateLink:
+          type: string
+          example: "[PUT] /movies/{movieid}?title=***&director=***&rating=***"
+    MovieItemAddResponse:
+        required:
+        - id
+        - director
+        - rating
+        - title
+        - filmDetail
+        type: object
+        properties:
+          id:
+            type: string
+            example: a8034f44-aee4-44cf-b32c-74cf452aaaa
+          title:
+            type: string
+            example: The Martian
+          rating:
+            type: string
+            example: "7"
+          director:
+            type: string
+            example: Paul McGuigan
+          filmDetail:
+            type: string
+            example: "[GET] /movies/{movieid}"

@@ -3,7 +3,7 @@ import json
 
 app = Flask(__name__)
 
-PORT = 3200
+PORT = 3000
 HOST = '127.0.0.1'
 
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
@@ -13,7 +13,10 @@ with open('{}/databases/movies.json'.format("."), "r") as jsf:
 # root message
 @app.route("/", methods=['GET'])
 def home():
-    return make_response("<h1 style='color:blue'>Welcome to the Movie service!</h1>", 200)
+    return make_response(""
+                         "<h1 style='color:blue'>Welcome to the Movie service!</h1>"
+                         "<a href=\"./json\">Liste des films<a>"
+                         "", 200)
 
 
 # to test templates of Flask
@@ -35,22 +38,26 @@ def get_json():
 def get_movie_byid(movieid):
     for movie in movies:
         if str(movie["id"]) == str(movieid):
-            res = make_response(jsonify(movie), 200)
+            return_val = movie.copy()
+            discover_api_get(return_val, request.url_root)
+            res = make_response(jsonify(return_val), 200)
             return res
     return make_response(jsonify({"error": "Movie ID not found"}), 400)
 
 
 # add a new movie
-@app.route("/movies/<movieid>", methods=["POST"])
-def create_movie(movieid):
+@app.route("/movies", methods=["POST"])
+def create_movie():
     req = request.get_json()
 
     for movie in movies:
-        if str(movie["id"]) == str(movieid):
+        if str(movie["id"]) == str(req["id"]):
             return make_response(jsonify({"error": "movie ID already exists"}), 409)
 
+    return_val = req.copy()
+    discover_api_update_create(return_val, request.url_root)
     movies.append(req)
-    res = make_response(jsonify({"message": "movie added"}), 200)
+    res = make_response(jsonify(return_val), 200)
     return res
 
 
@@ -60,7 +67,7 @@ def del_movie(movieid):
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             movies.remove(movie)
-            return make_response(jsonify(movie), 200)
+            return make_response(jsonify({"message": "item deleted"}), 200)
 
     res = make_response(jsonify({"error": "movie ID not found"}), 400)
     return res
@@ -70,17 +77,19 @@ def del_movie(movieid):
 # through a query
 @app.route("/moviesbytitle", methods=['GET'])
 def get_movie_bytitle():
-    json = ""
+    found_movie = {}
     if request.args:
         req = request.args
         for movie in movies:
             if str(movie["title"]) == str(req["title"]):
-                json = movie
+                found_movie = movie
 
-    if not json:
+    if not found_movie:
         res = make_response(jsonify({"error": "movie title not found"}), 400)
     else:
-        res = make_response(jsonify(json), 200)
+        return_val = found_movie.copy()
+        discover_api_get(return_val, request.url_root)
+        res = make_response(jsonify(return_val), 200)
     return res
 
 
@@ -90,11 +99,46 @@ def update_movie_rating(movieid, rate):
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             movie["rating"] = float(rate)
-            res = make_response(jsonify(movie), 200)
+            return_val = movie.copy()
+            discover_api_update_create(return_val, request.url_root)
+            res = make_response(jsonify(return_val), 200)
             return res
 
     res = make_response(jsonify({"error": "movie ID not found"}), 201)
     return res
+
+
+@app.route("/movies/<movieid>", methods=["PUT"])
+def update_movie(movieid):
+    found_movie = {}
+    for movie in movies:
+        if str(movie['id']) == str(movieid):
+            found_movie = movie
+            break
+
+    if not found_movie:
+        res = make_response(jsonify({"error": "movie not found"}), 400)
+    else:
+        if 'title' in request.args:
+            found_movie['title'] = request.args['title']
+        if 'director' in request.args:
+            found_movie['director'] = request.args['director']
+        if 'rating' in request.args:
+            found_movie['rating'] = float(request.args['rating'])
+        return_val = found_movie.copy()
+        discover_api_update_create(return_val, request.url_root)
+        res = make_response(jsonify(return_val), 200)
+    return res
+
+
+def discover_api_get(movie, base_url):
+    movie['deleteLink'] = "[HTTP DELETE] " + base_url + "movies/" + movie['id']
+    movie['updateRateLink'] = "[HTTP PUT] " + base_url + "movies/" + movie['id'] + "/{rate}"
+    movie['updateLink'] = "[HTTP PUT] " + base_url + "movies/" + movie['id'] + "?title=***&rating=***&director=***"
+
+
+def discover_api_update_create(movie, base_url):
+    movie['filmDetail'] = "[HTTP GET] " + base_url + "movies/" + movie['id']
 
 
 if __name__ == "__main__":
