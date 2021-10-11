@@ -27,7 +27,7 @@ def get_by_date(date):
   for time in times:
     if str(time["date"]) == str(date):
       return make_response(jsonify(time), 200)
-  return make_response("No movie for this date", 404)
+  return make_response("No movie for this date", 400)
 
 if __name__ == "__main__":
   app.run(host=HOST, port=PORT)
