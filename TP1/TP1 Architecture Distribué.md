@@ -34,6 +34,7 @@
 	```json
 	"deleteLink": 
 	"updateLink": 
+	"updateRateLink": 
 	```
 - `[HTTP POST] /movies` ajout d'un champs dans le retours de la création d'un film pour pouvoir consulter le détail du films ajouté
 	```json
@@ -43,3 +44,5 @@
 - ajout d'une methode generique pour modifier n'importe quel champs d'un film : 
 `/movies/{moviesid}?title=***&rating=***&director=***`
 Aucun champs n'est obligatoire
+
+## TP Bleu
