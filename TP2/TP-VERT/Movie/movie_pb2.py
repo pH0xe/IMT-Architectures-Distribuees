@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0bmovie.proto\"\x15\n\x07MovieID\x12\n\n\x02id\x18\x01 \x01(\t\"H\n\tMovieData\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\x12\x10\n\x08\x64irector\x18\x03 \x01(\t\x12\n\n\x02id\x18\x04 \x01(\t\"\x07\n\x05\x45mpty2X\n\x05Movie\x12&\n\x0cGetMovieByID\x12\x08.MovieID\x1a\n.MovieData\"\x00\x12\'\n\rGetListMovies\x12\x06.Empty\x1a\n.MovieData\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x0bmovie.proto\"\x15\n\x07MovieID\x12\n\n\x02id\x18\x01 \x01(\t\"H\n\tMovieData\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\x12\x10\n\x08\x64irector\x18\x03 \x01(\t\x12\n\n\x02id\x18\x04 \x01(\t\"\x07\n\x05\x45mpty\"\x1b\n\nMovieTitle\x12\r\n\x05title\x18\x01 \x01(\t\")\n\x0bMovieRating\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\"\x1a\n\nReturnInfo\x12\x0c\n\x04info\x18\x01 \x01(\t2\xb1\x02\n\x05Movie\x12&\n\x0cGetMovieByID\x12\x08.MovieID\x1a\n.MovieData\"\x00\x12\'\n\rGetListMovies\x12\x06.Empty\x1a\n.MovieData\"\x00\x30\x01\x12\'\n\x0b\x43reateMovie\x12\n.MovieData\x1a\n.MovieData\"\x00\x12&\n\x0b\x44\x65leteMovie\x12\x08.MovieID\x1a\x0b.ReturnInfo\"\x00\x12,\n\x0fGetMovieByTitle\x12\x0b.MovieTitle\x1a\n.MovieData\"\x00\x12/\n\x11UpdateMovieRating\x12\x0c.MovieRating\x1a\n.MovieData\"\x00\x12\'\n\x0bUpdateMovie\x12\n.MovieData\x1a\n.MovieData\"\x00\x62\x06proto3'
 )
 
 
@@ -134,9 +134,115 @@ _EMPTY = _descriptor.Descriptor(
   serialized_end=119,
 )
 
+
+_MOVIETITLE = _descriptor.Descriptor(
+  name='MovieTitle',
+  full_name='MovieTitle',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='title', full_name='MovieTitle.title', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=121,
+  serialized_end=148,
+)
+
+
+_MOVIERATING = _descriptor.Descriptor(
+  name='MovieRating',
+  full_name='MovieRating',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='MovieRating.id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='rating', full_name='MovieRating.rating', index=1,
+      number=2, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=150,
+  serialized_end=191,
+)
+
+
+_RETURNINFO = _descriptor.Descriptor(
+  name='ReturnInfo',
+  full_name='ReturnInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='info', full_name='ReturnInfo.info', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=193,
+  serialized_end=219,
+)
+
 DESCRIPTOR.message_types_by_name['MovieID'] = _MOVIEID
 DESCRIPTOR.message_types_by_name['MovieData'] = _MOVIEDATA
 DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
+DESCRIPTOR.message_types_by_name['MovieTitle'] = _MOVIETITLE
+DESCRIPTOR.message_types_by_name['MovieRating'] = _MOVIERATING
+DESCRIPTOR.message_types_by_name['ReturnInfo'] = _RETURNINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 MovieID = _reflection.GeneratedProtocolMessageType('MovieID', (_message.Message,), {
@@ -160,6 +266,27 @@ Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Empty)
 
+MovieTitle = _reflection.GeneratedProtocolMessageType('MovieTitle', (_message.Message,), {
+  'DESCRIPTOR' : _MOVIETITLE,
+  '__module__' : 'movie_pb2'
+  # @@protoc_insertion_point(class_scope:MovieTitle)
+  })
+_sym_db.RegisterMessage(MovieTitle)
+
+MovieRating = _reflection.GeneratedProtocolMessageType('MovieRating', (_message.Message,), {
+  'DESCRIPTOR' : _MOVIERATING,
+  '__module__' : 'movie_pb2'
+  # @@protoc_insertion_point(class_scope:MovieRating)
+  })
+_sym_db.RegisterMessage(MovieRating)
+
+ReturnInfo = _reflection.GeneratedProtocolMessageType('ReturnInfo', (_message.Message,), {
+  'DESCRIPTOR' : _RETURNINFO,
+  '__module__' : 'movie_pb2'
+  # @@protoc_insertion_point(class_scope:ReturnInfo)
+  })
+_sym_db.RegisterMessage(ReturnInfo)
+
 
 
 _MOVIE = _descriptor.ServiceDescriptor(
@@ -169,8 +296,8 @@ _MOVIE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=121,
-  serialized_end=209,
+  serialized_start=222,
+  serialized_end=527,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetMovieByID',
@@ -188,6 +315,56 @@ _MOVIE = _descriptor.ServiceDescriptor(
     index=1,
     containing_service=None,
     input_type=_EMPTY,
+    output_type=_MOVIEDATA,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CreateMovie',
+    full_name='Movie.CreateMovie',
+    index=2,
+    containing_service=None,
+    input_type=_MOVIEDATA,
+    output_type=_MOVIEDATA,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='DeleteMovie',
+    full_name='Movie.DeleteMovie',
+    index=3,
+    containing_service=None,
+    input_type=_MOVIEID,
+    output_type=_RETURNINFO,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='GetMovieByTitle',
+    full_name='Movie.GetMovieByTitle',
+    index=4,
+    containing_service=None,
+    input_type=_MOVIETITLE,
+    output_type=_MOVIEDATA,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='UpdateMovieRating',
+    full_name='Movie.UpdateMovieRating',
+    index=5,
+    containing_service=None,
+    input_type=_MOVIERATING,
+    output_type=_MOVIEDATA,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='UpdateMovie',
+    full_name='Movie.UpdateMovie',
+    index=6,
+    containing_service=None,
+    input_type=_MOVIEDATA,
     output_type=_MOVIEDATA,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
