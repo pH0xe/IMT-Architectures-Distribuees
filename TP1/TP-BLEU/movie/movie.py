@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, render_template, request, jsonify, make_response
 import json
 
@@ -7,7 +8,7 @@ PORT = 3000
 HOST = '127.0.0.1'
 
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
-    movies = json.load(jsf)["movies"]
+    moviesLocal = json.load(jsf)["movies"]
 
 
 # root message
@@ -19,17 +20,18 @@ def home():
                          "", 200)
 
 # get the complete json file
-@app.route("/json", methods=['GET'])
+@app.route("/movies", methods=['GET'])
 def get_json():
-    # res = make_response(jsonify(INFO), 200)
-    res = make_response(jsonify(movies), 200)
+    movies = requests.get("https://imdb-api.com/fr/API/Top250Movies/k_km5ai6li")
+    print()
+    res = make_response(jsonify(movies.json()['items']), 200)
     return res
 
 
 # get a movie info by its ID
 @app.route("/movies/<movieid>", methods=['GET'])
 def get_movie_byid(movieid):
-    for movie in movies:
+    for movie in moviesLocal:
         if str(movie["id"]) == str(movieid):
             return_val = movie.copy()
             discover_api_get(return_val, request.url_root)
@@ -43,13 +45,13 @@ def get_movie_byid(movieid):
 def create_movie():
     req = request.get_json()
 
-    for movie in movies:
+    for movie in moviesLocal:
         if str(movie["id"]) == str(req["id"]):
             return make_response(jsonify({"error": "movie ID already exists"}), 409)
 
     return_val = req.copy()
     discover_api_update_create(return_val, request.url_root)
-    movies.append(req)
+    moviesLocal.append(req)
     res = make_response(jsonify(return_val), 200)
     return res
 
@@ -57,9 +59,9 @@ def create_movie():
 # delete a movie
 @app.route("/movies/<movieid>", methods=["DELETE"])
 def del_movie(movieid):
-    for movie in movies:
+    for movie in moviesLocal:
         if str(movie["id"]) == str(movieid):
-            movies.remove(movie)
+            moviesLocal.remove(movie)
             return make_response(jsonify({"message": "item deleted"}), 200)
 
     res = make_response(jsonify({"error": "movie ID not found"}), 400)
@@ -73,9 +75,8 @@ def get_movie_bytitle():
     found_movie = {}
     if request.args:
         req = request.args
-        for movie in movies:
-            if str(movie["title"]) == str(req["title"]):
-                found_movie = movie
+        title = str(req["title"])
+        found_movie = requests.get("") # todo
 
     if not found_movie:
         res = make_response(jsonify({"error": "movie title not found"}), 400)
@@ -89,7 +90,7 @@ def get_movie_bytitle():
 # change a movie rating
 @app.route("/movies/<movieid>/<rate>", methods=["PUT"])
 def update_movie_rating(movieid, rate):
-    for movie in movies:
+    for movie in moviesLocal:
         if str(movie["id"]) == str(movieid):
             movie["rating"] = float(rate)
             return_val = movie.copy()
@@ -104,7 +105,7 @@ def update_movie_rating(movieid, rate):
 @app.route("/movies/<movieid>", methods=["PUT"])
 def update_movie(movieid):
     found_movie = {}
-    for movie in movies:
+    for movie in moviesLocal:
         if str(movie['id']) == str(movieid):
             found_movie = movie
             break
