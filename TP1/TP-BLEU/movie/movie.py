@@ -6,135 +6,84 @@ app = Flask(__name__)
 
 PORT = 3000
 HOST = '127.0.0.1'
+BASE_URL = 'https://imdb-api.com/fr/API/'
+TOKEN = '/k_km5ai6li'
 
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
     moviesLocal = json.load(jsf)["movies"]
 
+def construct_url(action):
+    return BASE_URL + action + TOKEN
 
 # root message
 @app.route("/", methods=['GET'])
 def home():
     return make_response(""
                          "<h1 style='color:blue'>Welcome to the Movie service!</h1>"
-                         "<a href=\"./json\">Liste des films<a>"
+                         "<a href=\"./movies\">Liste des films<a>"
                          "", 200)
+
+def is_request_error(req):
+    if req.status_code != 200:
+        return True, make_response(jsonify({ 'error': 'Unknow error'}), req.status_code)
+    req = req.json()
+    if len(req['errorMessage']) != 0:
+        return True, make_response(jsonify({'errorMessage': req['errorMessage']}), 418)
+    return False, None
 
 # get the complete json file
 @app.route("/movies", methods=['GET'])
-def get_json():
-    movies = requests.get("https://imdb-api.com/fr/API/Top250Movies/k_km5ai6li")
-    print()
-    res = make_response(jsonify(movies.json()['items']), 200)
-    return res
+def get_movies():
+    movies = requests.get(construct_url('Top250Movies'))
+    isError, response = is_request_error(movies)
+    if isError:
+        return response
+    movies = movies.json()
+    movies = movies['items']
+    # on ajoute le liens pour avoir des detail
+    add_link_to_movies(movies, request.url_root)
+    return make_response(jsonify(movies), 200)
 
 
 # get a movie info by its ID
 @app.route("/movies/<movieid>", methods=['GET'])
 def get_movie_byid(movieid):
-    for movie in moviesLocal:
-        if str(movie["id"]) == str(movieid):
-            return_val = movie.copy()
-            discover_api_get(return_val, request.url_root)
-            res = make_response(jsonify(return_val), 200)
-            return res
-    return make_response(jsonify({"error": "Movie ID not found"}), 400)
+    url = construct_url('Title') + '/' + movieid
+    movie = requests.get(url)
+    isError, response = is_request_error(movie)
+    if isError:
+        return response
+    movie = movie.json()
+    return make_response(jsonify(movie), 200)
 
 
-# add a new movie
-@app.route("/movies", methods=["POST"])
-def create_movie():
-    req = request.get_json()
-
-    for movie in moviesLocal:
-        if str(movie["id"]) == str(req["id"]):
-            return make_response(jsonify({"error": "movie ID already exists"}), 409)
-
-    return_val = req.copy()
-    discover_api_update_create(return_val, request.url_root)
-    moviesLocal.append(req)
-    res = make_response(jsonify(return_val), 200)
-    return res
-
-
-# delete a movie
-@app.route("/movies/<movieid>", methods=["DELETE"])
-def del_movie(movieid):
-    for movie in moviesLocal:
-        if str(movie["id"]) == str(movieid):
-            moviesLocal.remove(movie)
-            return make_response(jsonify({"message": "item deleted"}), 200)
-
-    res = make_response(jsonify({"error": "movie ID not found"}), 400)
-    return res
-
-
-# get a movie info by its name
-# through a query
+# get a movie info by its name through a query
 @app.route("/moviesbytitle", methods=['GET'])
 def get_movie_bytitle():
-    found_movie = {}
+    found_movies = {}
     if request.args:
         req = request.args
         title = str(req["title"])
-        found_movie = requests.get("") # todo
-
-    if not found_movie:
-        res = make_response(jsonify({"error": "movie title not found"}), 400)
+        url = construct_url('SearchMovie') + '/' + title
+        found_movies = requests.get(url)
     else:
-        return_val = found_movie.copy()
-        discover_api_get(return_val, request.url_root)
-        res = make_response(jsonify(return_val), 200)
-    return res
+        return make_response(jsonify({'errorMessage': 'No movie title profided'}), 400)
+
+    isError, response = is_request_error(found_movies)
+    if isError:
+        return response
+
+    found_movies = found_movies.json()
+    found_movies = found_movies['results']
+    add_link_to_movies(found_movies, request.url_root)
+    return make_response(jsonify(found_movies))
 
 
-# change a movie rating
-@app.route("/movies/<movieid>/<rate>", methods=["PUT"])
-def update_movie_rating(movieid, rate):
-    for movie in moviesLocal:
-        if str(movie["id"]) == str(movieid):
-            movie["rating"] = float(rate)
-            return_val = movie.copy()
-            discover_api_update_create(return_val, request.url_root)
-            res = make_response(jsonify(return_val), 200)
-            return res
-
-    res = make_response(jsonify({"error": "movie ID not found"}), 201)
-    return res
-
-
-@app.route("/movies/<movieid>", methods=["PUT"])
-def update_movie(movieid):
-    found_movie = {}
-    for movie in moviesLocal:
-        if str(movie['id']) == str(movieid):
-            found_movie = movie
-            break
-
-    if not found_movie:
-        res = make_response(jsonify({"error": "movie not found"}), 400)
-    else:
-        if 'title' in request.args:
-            found_movie['title'] = request.args['title']
-        if 'director' in request.args:
-            found_movie['director'] = request.args['director']
-        if 'rating' in request.args:
-            found_movie['rating'] = float(request.args['rating'])
-        return_val = found_movie.copy()
-        discover_api_update_create(return_val, request.url_root)
-        res = make_response(jsonify(return_val), 200)
-    return res
-
-
-def discover_api_get(movie, base_url):
-    movie['deleteLink'] = "[HTTP DELETE] " + base_url + "movies/" + movie['id']
-    movie['updateRateLink'] = "[HTTP PUT] " + base_url + "movies/" + movie['id'] + "/{rate}"
-    movie['updateLink'] = "[HTTP PUT] " + base_url + "movies/" + movie['id'] + "?title=***&rating=***&director=***"
-
-
-def discover_api_update_create(movie, base_url):
-    movie['filmDetail'] = "[HTTP GET] " + base_url + "movies/" + movie['id']
+def add_link_to_movies(movies, base_url):
+    for movie in movies:
+        movie['filmDetail'] = "[HTTP GET] " + base_url + "movies/" + movie['id']
 
 
 if __name__ == "__main__":
     print("Server running in port %s" % (PORT))
-    app.run(host=HOST, port=PORT)
+    app.run(host=HOST, port=PORT, debug=True)
