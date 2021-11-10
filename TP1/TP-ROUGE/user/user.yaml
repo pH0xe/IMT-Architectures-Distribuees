@@ -1,0 +1,197 @@
+---
+openapi: 3.0.0
+info:
+  title: User API
+  description: This is the API of the User service
+  contact:
+    email: helene.coullon@imt-atlantique.fr
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/UE-archi-distribuees/User/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://virtserver.swaggerhub.com/UE-archi-distribuees/Movie/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+paths:
+  /:
+    get:
+      tags:
+      - developers
+      summary: home page of the service
+      description: |
+        Nothing to do
+      operationId: index
+      responses:
+        "200":
+          description: welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Test</h1>
+  /users:
+    get:
+      tags:
+      - developers
+      summary: get the full JSON databases
+      description: |
+        Nothing to do
+      operationId: get_json
+      responses:
+        "200":
+          description: full JSON
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+    post:
+      tags:
+      - admins
+      summary: Add an user
+      description: |
+        Create an new user with the body
+      operationId: add_user
+      responses:
+        "200":
+          description: created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "409":
+          description: an existing item already exists
+  /users/{user_id}:
+    get:
+      tags:
+      - developers
+      summary: get the user by id
+      description: |
+        Get the user with his id
+      operationId: get_user
+      parameters:
+      - name: user_id
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: bad input parameter
+    delete:
+      tags:
+      - admins
+      summary: delete an user by id
+      description: |
+        Delete the user with his id
+      operationId: delete_user
+      parameters:
+      - name: user_id
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: Removed User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: This user id doesn't exist
+  /watched_movies/{user_id}:
+    get:
+      tags:
+      - developers
+      summary: get watched movie by an user using id
+      description: |
+        Get watched movie by an user using id
+      operationId: get_watched_movies
+      parameters:
+      - name: user_id
+        in: path
+        description: user id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maximum: 1
+          minimum: 1
+          type: string
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchedMovies'
+        "400":
+          description: This user id doesn't exist
+components:
+  schemas:
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    User:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+          example: chris_rivers
+        name:
+          type: string
+          example: Chris Rivers
+        last_active:
+          type: number
+          example: 1360031425
+    WatchedMovies:
+      type: array
+      items:
+        $ref: '#/components/schemas/Movie'
+    Movie:
+      required:
+        - id
+        - rating
+        - title
+        - director
+      type: object
+      properties:
+        id:
+          type: string
+          example: "267eedb8-0f5d-42d5-8f43-72426b9fb3e6"
+        rating:
+          type: number
+          example: "7.0"
+        title:
+          type: string
+          example: Creed
+        director:
+          type: string
+          example: Ryan Coogler
