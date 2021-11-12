@@ -4,9 +4,6 @@ import movie_pb2_grpc
 import grpc
 from concurrent import futures
 
-with open('{}/databases/movies.json'.format("."), "r") as jsf:
-    movies = json.load(jsf)["movies"]
-
 
 class MovieServicer(movie_pb2_grpc.MovieServicer):
     def __init__(self):

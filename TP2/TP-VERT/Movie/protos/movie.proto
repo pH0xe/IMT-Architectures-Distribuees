@@ -8,9 +8,11 @@ service Movie {
   rpc UpdateMovieRating(MovieRating) returns (MovieData) {}
   rpc UpdateMovie(MovieData) returns (MovieData) {}
 }
+
 message MovieID {
   string id = 1;
 }
+
 message MovieData {
   string title = 1;
   float rating = 2;
