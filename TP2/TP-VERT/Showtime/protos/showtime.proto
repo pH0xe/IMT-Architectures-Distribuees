@@ -1,10 +1,10 @@
 syntax = "proto3";
 service Showtime {
-  rpc GetListTimes(Empty) returns (stream TimesData) {}
+  rpc GetListTimes(EmptyShowtime) returns (stream TimesData) {}
   rpc GetTimesByDate(Date) returns (TimesData) {}
 }
 
-message Empty {}
+message EmptyShowtime {}
 
 message TimesData {
   string date = 1;

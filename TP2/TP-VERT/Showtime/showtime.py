@@ -14,8 +14,9 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
         print("GetListTimes")
 
         for time in self.times:
-            for movie in time["movies"]:
-                yield showtime_pb2.TimesData(date=time["date"], movies=movie)
+            # for movie in time["movies"]:
+            #     yield showtime_pb2.TimesData(date=time["date"], movies=movie)
+            yield showtime_pb2.TimesData(date=time["date"], movies=time["movies"])
 
     # Get times for a specific date
     def GetTimesByDate(self, request, context):
