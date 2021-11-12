@@ -99,12 +99,11 @@ def get_watched_movies(user_id):
 
         with grpc.insecure_channel('localhost:' + str(BOOKING_PORT)) as channelBooking:
             stub = booking_pb2_grpc.BookingStub(channelBooking)
-            userId = booking_pb2.UserID(userid=user_id)
+            userId = booking_pb2.UserIDBooking(userid=user_id)
             booking = stub.getBookingForUser(userId)
 
-            dates = json.loads(booking.dates)
-            for date in dates:
-                for mov in date["movies"]:
+            for date in booking.dates:
+                for mov in date.movies:
                     watched_movies.append(mov)
             res = []
             for movie in movies:
