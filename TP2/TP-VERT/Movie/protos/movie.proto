@@ -3,7 +3,7 @@ service Movie {
   rpc GetMovieByID(MovieID) returns (MovieData) {}        // get Movie by id
   rpc GetListMovies(EmptyMovie) returns (stream MovieData) {}  // get all
   rpc CreateMovie(MovieData) returns (MovieData) {}       // create movie
-  rpc DeleteMovie(MovieID) returns (ReturnInfo) {}
+  rpc DeleteMovie(MovieID) returns (ReturnInfoMovie) {}
   rpc GetMovieByTitle(MovieTitle) returns (MovieData) {}
   rpc UpdateMovieRating(MovieRating) returns (MovieData) {}
   rpc UpdateMovie(MovieData) returns (MovieData) {}
@@ -31,6 +31,6 @@ message MovieRating {
   float rating = 2;
 }
 
-message ReturnInfo {
+message ReturnInfoMovie {
   string info = 1;
 }

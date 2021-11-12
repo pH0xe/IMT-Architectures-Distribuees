@@ -32,7 +32,7 @@ class MovieStub(object):
         self.DeleteMovie = channel.unary_unary(
                 '/Movie/DeleteMovie',
                 request_serializer=movie__pb2.MovieID.SerializeToString,
-                response_deserializer=movie__pb2.ReturnInfo.FromString,
+                response_deserializer=movie__pb2.ReturnInfoMovie.FromString,
                 )
         self.GetMovieByTitle = channel.unary_unary(
                 '/Movie/GetMovieByTitle',
@@ -117,7 +117,7 @@ def add_MovieServicer_to_server(servicer, server):
             'DeleteMovie': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteMovie,
                     request_deserializer=movie__pb2.MovieID.FromString,
-                    response_serializer=movie__pb2.ReturnInfo.SerializeToString,
+                    response_serializer=movie__pb2.ReturnInfoMovie.SerializeToString,
             ),
             'GetMovieByTitle': grpc.unary_unary_rpc_method_handler(
                     servicer.GetMovieByTitle,
@@ -208,7 +208,7 @@ class Movie(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Movie/DeleteMovie',
             movie__pb2.MovieID.SerializeToString,
-            movie__pb2.ReturnInfo.FromString,
+            movie__pb2.ReturnInfoMovie.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

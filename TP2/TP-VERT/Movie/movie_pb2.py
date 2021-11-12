@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x0bmovie.proto\"\x15\n\x07MovieID\x12\n\n\x02id\x18\x01 \x01(\t\"H\n\tMovieData\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\x12\x10\n\x08\x64irector\x18\x03 \x01(\t\x12\n\n\x02id\x18\x04 \x01(\t\"\x0c\n\nEmptyMovie\"\x1b\n\nMovieTitle\x12\r\n\x05title\x18\x01 \x01(\t\")\n\x0bMovieRating\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\"\x1a\n\nReturnInfo\x12\x0c\n\x04info\x18\x01 \x01(\t2\xb6\x02\n\x05Movie\x12&\n\x0cGetMovieByID\x12\x08.MovieID\x1a\n.MovieData\"\x00\x12,\n\rGetListMovies\x12\x0b.EmptyMovie\x1a\n.MovieData\"\x00\x30\x01\x12\'\n\x0b\x43reateMovie\x12\n.MovieData\x1a\n.MovieData\"\x00\x12&\n\x0b\x44\x65leteMovie\x12\x08.MovieID\x1a\x0b.ReturnInfo\"\x00\x12,\n\x0fGetMovieByTitle\x12\x0b.MovieTitle\x1a\n.MovieData\"\x00\x12/\n\x11UpdateMovieRating\x12\x0c.MovieRating\x1a\n.MovieData\"\x00\x12\'\n\x0bUpdateMovie\x12\n.MovieData\x1a\n.MovieData\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x0bmovie.proto\"\x15\n\x07MovieID\x12\n\n\x02id\x18\x01 \x01(\t\"H\n\tMovieData\x12\r\n\x05title\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\x12\x10\n\x08\x64irector\x18\x03 \x01(\t\x12\n\n\x02id\x18\x04 \x01(\t\"\x0c\n\nEmptyMovie\"\x1b\n\nMovieTitle\x12\r\n\x05title\x18\x01 \x01(\t\")\n\x0bMovieRating\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06rating\x18\x02 \x01(\x02\"\x1f\n\x0fReturnInfoMovie\x12\x0c\n\x04info\x18\x01 \x01(\t2\xbb\x02\n\x05Movie\x12&\n\x0cGetMovieByID\x12\x08.MovieID\x1a\n.MovieData\"\x00\x12,\n\rGetListMovies\x12\x0b.EmptyMovie\x1a\n.MovieData\"\x00\x30\x01\x12\'\n\x0b\x43reateMovie\x12\n.MovieData\x1a\n.MovieData\"\x00\x12+\n\x0b\x44\x65leteMovie\x12\x08.MovieID\x1a\x10.ReturnInfoMovie\"\x00\x12,\n\x0fGetMovieByTitle\x12\x0b.MovieTitle\x1a\n.MovieData\"\x00\x12/\n\x11UpdateMovieRating\x12\x0c.MovieRating\x1a\n.MovieData\"\x00\x12\'\n\x0bUpdateMovie\x12\n.MovieData\x1a\n.MovieData\"\x00\x62\x06proto3'
 )
 
 
@@ -206,16 +206,16 @@ _MOVIERATING = _descriptor.Descriptor(
 )
 
 
-_RETURNINFO = _descriptor.Descriptor(
-  name='ReturnInfo',
-  full_name='ReturnInfo',
+_RETURNINFOMOVIE = _descriptor.Descriptor(
+  name='ReturnInfoMovie',
+  full_name='ReturnInfoMovie',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='info', full_name='ReturnInfo.info', index=0,
+      name='info', full_name='ReturnInfoMovie.info', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -234,7 +234,7 @@ _RETURNINFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=198,
-  serialized_end=224,
+  serialized_end=229,
 )
 
 DESCRIPTOR.message_types_by_name['MovieID'] = _MOVIEID
@@ -242,7 +242,7 @@ DESCRIPTOR.message_types_by_name['MovieData'] = _MOVIEDATA
 DESCRIPTOR.message_types_by_name['EmptyMovie'] = _EMPTYMOVIE
 DESCRIPTOR.message_types_by_name['MovieTitle'] = _MOVIETITLE
 DESCRIPTOR.message_types_by_name['MovieRating'] = _MOVIERATING
-DESCRIPTOR.message_types_by_name['ReturnInfo'] = _RETURNINFO
+DESCRIPTOR.message_types_by_name['ReturnInfoMovie'] = _RETURNINFOMOVIE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 MovieID = _reflection.GeneratedProtocolMessageType('MovieID', (_message.Message,), {
@@ -280,12 +280,12 @@ MovieRating = _reflection.GeneratedProtocolMessageType('MovieRating', (_message.
   })
 _sym_db.RegisterMessage(MovieRating)
 
-ReturnInfo = _reflection.GeneratedProtocolMessageType('ReturnInfo', (_message.Message,), {
-  'DESCRIPTOR' : _RETURNINFO,
+ReturnInfoMovie = _reflection.GeneratedProtocolMessageType('ReturnInfoMovie', (_message.Message,), {
+  'DESCRIPTOR' : _RETURNINFOMOVIE,
   '__module__' : 'movie_pb2'
-  # @@protoc_insertion_point(class_scope:ReturnInfo)
+  # @@protoc_insertion_point(class_scope:ReturnInfoMovie)
   })
-_sym_db.RegisterMessage(ReturnInfo)
+_sym_db.RegisterMessage(ReturnInfoMovie)
 
 
 
@@ -296,8 +296,8 @@ _MOVIE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=227,
-  serialized_end=537,
+  serialized_start=232,
+  serialized_end=547,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetMovieByID',
@@ -335,7 +335,7 @@ _MOVIE = _descriptor.ServiceDescriptor(
     index=3,
     containing_service=None,
     input_type=_MOVIEID,
-    output_type=_RETURNINFO,
+    output_type=_RETURNINFOMOVIE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

@@ -1,18 +1,33 @@
 syntax = "proto3";
 service Booking {
-  rpc getBookings(EmptyBooking) returns (stream Book);
-  rpc getBookingForUser(UserID) returns (Book);
-  rpc addBookingByUser(newBooking) returns (returnInfo);
+  rpc getBookings(EmptyBooking) returns (stream BookingData);
+  rpc getBookingForUser(UserIDBooking) returns (BookingData);
+  rpc addBookingByUser(newBooking) returns (returnInfoBooking);
 }
 
 message EmptyBooking {}
 
-message Book {
+
+//{
+//  "userid": "chris_rivers",
+//  "dates": [
+//    {
+//      "date": "20151201",
+//      "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6"]
+//    }
+//  ]
+//}
+message BookingData {
+  message datesData {
+    string date = 1;
+    repeated string movies = 2;
+  }
+
   string userid = 1;
-  string dates = 2;
+  repeated datesData dates = 2;
 }
 
-message UserID {
+message UserIDBooking {
   string userid = 1;
 }
 
@@ -22,7 +37,7 @@ message newBooking {
   string date = 3;
 }
 
-message returnInfo {
+message returnInfoBooking {
   bool error = 1;
   string message = 2;
 }
