@@ -51,14 +51,14 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
     # Get all bookings in a list
     def getBookings(self, request, context):
         for booking in self.bookings:
-            yield booking_pb2.Book(userid=booking['userid'], dates=json.dumps(booking['dates']))
+            yield booking_pb2.BookingData(userid=booking['userid'], dates=booking['dates'])
 
     # Get booking for a specific user
     def getBookingForUser(self, request, context):
         for booking in self.bookings:
             if booking['userid'] == request.userid:
-                return booking_pb2.Book(userid=booking['userid'], dates=json.dumps(booking['dates']))
-        return booking_pb2.Book(userid="", dates="")
+                return booking_pb2.BookingData(userid=booking['userid'], dates=booking['dates'])
+        return booking_pb2.BookingData(userid="", dates="")
 
     # Add a booking for a user
     def addBookingByUser(self, request, context):
@@ -69,7 +69,7 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
         p_movie = request.movie
         if not is_booking_available(p_date, p_movie):
             print('================== END addBookingByUser ==================')
-            return booking_pb2.returnInfo(error=True, message='their is no available movie at this date')
+            return booking_pb2.returnInfoBooking(error=True, message='their is no available movie at this date')
 
         exist, booking = self.userAlreadyExist(p_userId)
         if not exist:
@@ -80,15 +80,15 @@ class BookingServicer(booking_pb2_grpc.BookingServicer):
             arr = [p_movie]
             booking['dates'].append({'date': p_date, 'movies': arr})
             print('================== END addBookingByUser ==================')
-            return booking_pb2.returnInfo(error=False, message='Booking successfully added')
+            return booking_pb2.returnInfoBooking(error=False, message='Booking successfully added')
 
         if haBooking(dates, p_movie):
             print('================== END addBookingByUser ==================')
-            return booking_pb2.returnInfo(error=True, message='Booking already made')
+            return booking_pb2.returnInfoBooking(error=True, message='Booking already made')
 
         dates['movies'].append(p_movie)
         print('================== END addBookingByUser ==================')
-        return booking_pb2.returnInfo(error=False, message='Booking successfully added')
+        return booking_pb2.returnInfoBooking(error=False, message='Booking successfully added')
 
 
     def userAlreadyExist(self, userId):

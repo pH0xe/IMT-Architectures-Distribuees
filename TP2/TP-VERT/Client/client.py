@@ -10,6 +10,7 @@ import movie_pb2_grpc
 import showtime_pb2
 import showtime_pb2_grpc
 
+
 # Test des fonction movie
 def testMovie():
     with grpc.insecure_channel('localhost:3001') as channel:
@@ -24,26 +25,30 @@ def testMovie():
         print("\n-------------- CreateMovie --------------")
         create_movie(stub)
 
+
 def get_movie_by_id(stub, id):
     movie = stub.GetMovieByID(id)
     print(movie)
+
 
 def get_list_movies(stub):
     allmovies = stub.GetListMovies(movie_pb2.EmptyMovie())
     for movie in allmovies:
         print("Movie called %s" % (movie.title))
 
+
 def get_movie_by_title(stub, movie_title_str):
     movie_title = movie_pb2.MovieTitle(title=movie_title_str)
     movie = stub.GetMovieByTitle(movie_title)
     print(movie)
 
+
 def create_movie(stub):
     randomUUID = str(uuid.uuid4())
     randomRating = random.uniform(0, 10)
-    movie = stub.CreateMovie(movie_pb2.MovieData(title="new test film", director="new movie director", id=randomUUID, rating=randomRating))
+    movie = stub.CreateMovie(
+        movie_pb2.MovieData(title="new test film", director="new movie director", id=randomUUID, rating=randomRating))
     print(movie)
-
 
 
 # Test functions of Showtime
@@ -57,15 +62,16 @@ def testShowtime():
         print("\n------ GET TIMES FOR BAD DATE ------")
         get_times_by_date(stub, "20151200")
 
+
 def get_list_times(stub):
     times = stub.GetListTimes(showtime_pb2.EmptyShowtime())
     for time in times:
         print(time.date + "\nmovies : \n\t" + '\n\t'.join([str(lst) for lst in time.movies]))
 
+
 def get_times_by_date(stub, date):
     time = stub.GetTimesByDate(showtime_pb2.Date(date=date))
     print(time)
-
 
 
 # Test functions of Booking
@@ -95,16 +101,21 @@ def testBooking():
         print("\n------ GET ALL BOOKINGS ------")
         get_list_bookings(stub)
 
+
 def get_list_bookings(stub):
     bookings = stub.getBookings(booking_pb2.EmptyBooking())
     for booking in bookings:
         print(booking.userid)
-        print(booking.dates)
-
+        for d in booking.dates:
+            print('date : ' + d.date)
+            for m in d.movies:
+                print('\t' + m)
+        print()
 
 def get_bookings_user(stub):
-    booking = stub.getBookingForUser(booking_pb2.UserID(userid="dwight_schrute"))
+    booking = stub.getBookingForUser(booking_pb2.UserIDBooking(userid="dwight_schrute"))
     print(booking.userid)  # Too long with dates
+
 
 def create_booking(stub, userid, movie, date):
     newBooking = booking_pb2.newBooking(userid=userid, movie=movie, date=date)
