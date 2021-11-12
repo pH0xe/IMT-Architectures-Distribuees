@@ -19,15 +19,15 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rbooking.proto\"\x07\n\x05\x45mpty\"%\n\x04\x42ook\x12\x0e\n\x06userid\x18\x01 \x01(\t\x12\r\n\x05\x64\x61tes\x18\x02 \x03(\t\"\x18\n\x06UserID\x12\x0e\n\x06userid\x18\x01 \x01(\t2q\n\x07\x42ooking\x12\x1e\n\x0bgetBookings\x12\x06.Empty\x1a\x05.Book0\x01\x12#\n\x11getBookingForUser\x12\x07.UserID\x1a\x05.Book\x12!\n\x10\x61\x64\x64\x42ookingByUser\x12\x05.Book\x1a\x06.Emptyb\x06proto3'
+  serialized_pb=b'\n\rbooking.proto\"\x0e\n\x0c\x45mptyBooking\"%\n\x04\x42ook\x12\x0e\n\x06userid\x18\x01 \x01(\t\x12\r\n\x05\x64\x61tes\x18\x02 \x01(\t\"\x18\n\x06UserID\x12\x0e\n\x06userid\x18\x01 \x01(\t\"9\n\nnewBooking\x12\x0e\n\x06userid\x18\x01 \x01(\t\x12\r\n\x05movie\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\",\n\nreturnInfo\x12\r\n\x05\x65rror\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\x83\x01\n\x07\x42ooking\x12%\n\x0bgetBookings\x12\r.EmptyBooking\x1a\x05.Book0\x01\x12#\n\x11getBookingForUser\x12\x07.UserID\x1a\x05.Book\x12,\n\x10\x61\x64\x64\x42ookingByUser\x12\x0b.newBooking\x1a\x0b.returnInfob\x06proto3'
 )
 
 
 
 
-_EMPTY = _descriptor.Descriptor(
-  name='Empty',
-  full_name='Empty',
+_EMPTYBOOKING = _descriptor.Descriptor(
+  name='EmptyBooking',
+  full_name='EmptyBooking',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -46,7 +46,7 @@ _EMPTY = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=17,
-  serialized_end=24,
+  serialized_end=31,
 )
 
 
@@ -67,8 +67,8 @@ _BOOK = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='dates', full_name='Book.dates', index=1,
-      number=2, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -84,8 +84,8 @@ _BOOK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=26,
-  serialized_end=63,
+  serialized_start=33,
+  serialized_end=70,
 )
 
 
@@ -116,21 +116,108 @@ _USERID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=65,
-  serialized_end=89,
+  serialized_start=72,
+  serialized_end=96,
 )
 
-DESCRIPTOR.message_types_by_name['Empty'] = _EMPTY
+
+_NEWBOOKING = _descriptor.Descriptor(
+  name='newBooking',
+  full_name='newBooking',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='userid', full_name='newBooking.userid', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='movie', full_name='newBooking.movie', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='date', full_name='newBooking.date', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=98,
+  serialized_end=155,
+)
+
+
+_RETURNINFO = _descriptor.Descriptor(
+  name='returnInfo',
+  full_name='returnInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='error', full_name='returnInfo.error', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='message', full_name='returnInfo.message', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=157,
+  serialized_end=201,
+)
+
+DESCRIPTOR.message_types_by_name['EmptyBooking'] = _EMPTYBOOKING
 DESCRIPTOR.message_types_by_name['Book'] = _BOOK
 DESCRIPTOR.message_types_by_name['UserID'] = _USERID
+DESCRIPTOR.message_types_by_name['newBooking'] = _NEWBOOKING
+DESCRIPTOR.message_types_by_name['returnInfo'] = _RETURNINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
-Empty = _reflection.GeneratedProtocolMessageType('Empty', (_message.Message,), {
-  'DESCRIPTOR' : _EMPTY,
+EmptyBooking = _reflection.GeneratedProtocolMessageType('EmptyBooking', (_message.Message,), {
+  'DESCRIPTOR' : _EMPTYBOOKING,
   '__module__' : 'booking_pb2'
-  # @@protoc_insertion_point(class_scope:Empty)
+  # @@protoc_insertion_point(class_scope:EmptyBooking)
   })
-_sym_db.RegisterMessage(Empty)
+_sym_db.RegisterMessage(EmptyBooking)
 
 Book = _reflection.GeneratedProtocolMessageType('Book', (_message.Message,), {
   'DESCRIPTOR' : _BOOK,
@@ -146,6 +233,20 @@ UserID = _reflection.GeneratedProtocolMessageType('UserID', (_message.Message,),
   })
 _sym_db.RegisterMessage(UserID)
 
+newBooking = _reflection.GeneratedProtocolMessageType('newBooking', (_message.Message,), {
+  'DESCRIPTOR' : _NEWBOOKING,
+  '__module__' : 'booking_pb2'
+  # @@protoc_insertion_point(class_scope:newBooking)
+  })
+_sym_db.RegisterMessage(newBooking)
+
+returnInfo = _reflection.GeneratedProtocolMessageType('returnInfo', (_message.Message,), {
+  'DESCRIPTOR' : _RETURNINFO,
+  '__module__' : 'booking_pb2'
+  # @@protoc_insertion_point(class_scope:returnInfo)
+  })
+_sym_db.RegisterMessage(returnInfo)
+
 
 
 _BOOKING = _descriptor.ServiceDescriptor(
@@ -155,15 +256,15 @@ _BOOKING = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=91,
-  serialized_end=204,
+  serialized_start=204,
+  serialized_end=335,
   methods=[
   _descriptor.MethodDescriptor(
     name='getBookings',
     full_name='Booking.getBookings',
     index=0,
     containing_service=None,
-    input_type=_EMPTY,
+    input_type=_EMPTYBOOKING,
     output_type=_BOOK,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
@@ -183,8 +284,8 @@ _BOOKING = _descriptor.ServiceDescriptor(
     full_name='Booking.addBookingByUser',
     index=2,
     containing_service=None,
-    input_type=_BOOK,
-    output_type=_EMPTY,
+    input_type=_NEWBOOKING,
+    output_type=_RETURNINFO,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

@@ -16,7 +16,7 @@ class BookingStub(object):
         """
         self.getBookings = channel.unary_stream(
                 '/Booking/getBookings',
-                request_serializer=booking__pb2.Empty.SerializeToString,
+                request_serializer=booking__pb2.EmptyBooking.SerializeToString,
                 response_deserializer=booking__pb2.Book.FromString,
                 )
         self.getBookingForUser = channel.unary_unary(
@@ -26,8 +26,8 @@ class BookingStub(object):
                 )
         self.addBookingByUser = channel.unary_unary(
                 '/Booking/addBookingByUser',
-                request_serializer=booking__pb2.Book.SerializeToString,
-                response_deserializer=booking__pb2.Empty.FromString,
+                request_serializer=booking__pb2.newBooking.SerializeToString,
+                response_deserializer=booking__pb2.returnInfo.FromString,
                 )
 
 
@@ -57,7 +57,7 @@ def add_BookingServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'getBookings': grpc.unary_stream_rpc_method_handler(
                     servicer.getBookings,
-                    request_deserializer=booking__pb2.Empty.FromString,
+                    request_deserializer=booking__pb2.EmptyBooking.FromString,
                     response_serializer=booking__pb2.Book.SerializeToString,
             ),
             'getBookingForUser': grpc.unary_unary_rpc_method_handler(
@@ -67,8 +67,8 @@ def add_BookingServicer_to_server(servicer, server):
             ),
             'addBookingByUser': grpc.unary_unary_rpc_method_handler(
                     servicer.addBookingByUser,
-                    request_deserializer=booking__pb2.Book.FromString,
-                    response_serializer=booking__pb2.Empty.SerializeToString,
+                    request_deserializer=booking__pb2.newBooking.FromString,
+                    response_serializer=booking__pb2.returnInfo.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -92,7 +92,7 @@ class Booking(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/Booking/getBookings',
-            booking__pb2.Empty.SerializeToString,
+            booking__pb2.EmptyBooking.SerializeToString,
             booking__pb2.Book.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -126,7 +126,7 @@ class Booking(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Booking/addBookingByUser',
-            booking__pb2.Book.SerializeToString,
-            booking__pb2.Empty.FromString,
+            booking__pb2.newBooking.SerializeToString,
+            booking__pb2.returnInfo.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

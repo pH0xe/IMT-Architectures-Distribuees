@@ -21,7 +21,7 @@ class MovieStub(object):
                 )
         self.GetListMovies = channel.unary_stream(
                 '/Movie/GetListMovies',
-                request_serializer=movie__pb2.Empty.SerializeToString,
+                request_serializer=movie__pb2.EmptyMovie.SerializeToString,
                 response_deserializer=movie__pb2.MovieData.FromString,
                 )
         self.CreateMovie = channel.unary_unary(
@@ -106,7 +106,7 @@ def add_MovieServicer_to_server(servicer, server):
             ),
             'GetListMovies': grpc.unary_stream_rpc_method_handler(
                     servicer.GetListMovies,
-                    request_deserializer=movie__pb2.Empty.FromString,
+                    request_deserializer=movie__pb2.EmptyMovie.FromString,
                     response_serializer=movie__pb2.MovieData.SerializeToString,
             ),
             'CreateMovie': grpc.unary_unary_rpc_method_handler(
@@ -173,7 +173,7 @@ class Movie(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/Movie/GetListMovies',
-            movie__pb2.Empty.SerializeToString,
+            movie__pb2.EmptyMovie.SerializeToString,
             movie__pb2.MovieData.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
