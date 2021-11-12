@@ -2,8 +2,13 @@ import grpc
 from flask import Flask, make_response, jsonify, request
 import json
 
+from google.protobuf.json_format import MessageToDict
+
 import movie_pb2_grpc
 import movie_pb2
+
+import booking_pb2_grpc
+import booking_pb2
 
 BOOKING_PORT = 3004
 SHOWTIME_PORT = 3003
@@ -88,21 +93,26 @@ def get_watched_movies(user_id):
         return make_response("This user id doesn't exist", 400)
 
     watched_movies = []
-    with grpc.insecure_channel('localhost:' + MOVIE_PORT) as channel:
-        stub = movie_pb2_grpc.MovieStub(channel)
-        userId = movie_pb2.MovieID(id=user_id)
-        # TODO request booking grpc
-    booking = requests.get("http://127.0.0.1:3002/bookings/" + user_id)
-    movies = stub.GetListMovies(movie_pb2.Empty())
+    with grpc.insecure_channel('localhost:' + str(MOVIE_PORT)) as channelMovie:
+        stub = movie_pb2_grpc.MovieStub(channelMovie)
+        movies = stub.GetListMovies(movie_pb2.EmptyMovie())
 
-    for movie in movies:
-        for date in booking.dates:
-            for mov in date.movies:
-                if mov == movie.id:
-                    watched_movies.append(movie)
+        with grpc.insecure_channel('localhost:' + str(BOOKING_PORT)) as channelBooking:
+            stub = booking_pb2_grpc.BookingStub(channelBooking)
+            userId = booking_pb2.UserID(userid=user_id)
+            booking = stub.getBookingForUser(userId)
 
-            return make_response(jsonify(watched_movies), 200)
+            dates = json.loads(booking.dates)
+            for date in dates:
+                for mov in date["movies"]:
+                    watched_movies.append(mov)
+            res = []
+            for movie in movies:
+                if movie.id in watched_movies:
+                    mv = MessageToDict(movie)
+                    res.append(mv)
 
+            return make_response(jsonify(res), 200)
 
 
 if __name__ == "__main__":
