@@ -1,0 +1,15 @@
+version: '3.9'  # version of compose format
+
+services:
+  user-service:
+    build: ./user  # path is relative to docker-compose.yml localtion
+    volumes:
+      - ./user/build
+    ports:
+      - 3003:80  # host:container
+  movie-service:
+    build: ./movie  # path is relative to docker-compose.yml localtion
+    volumes:
+      - ./movie/build
+    ports:
+      - 3000:80  # host:container

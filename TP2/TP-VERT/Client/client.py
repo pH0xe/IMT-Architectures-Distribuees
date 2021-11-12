@@ -1,13 +1,16 @@
+import random
+import uuid
+
 import grpc
-#import movie_pb2
-#import movie_pb2_grpc
-#import showtime_pb2
-#import showtime_pb2_grpc
+import movie_pb2
+import movie_pb2_grpc
+import showtime_pb2
+import showtime_pb2_grpc
 import booking_pb2
 import booking_pb2_grpc
 
 # Test functions of Movie
-"""
+
 def testMovie():
     with grpc.insecure_channel('localhost:3001') as channel:
         stub = movie_pb2_grpc.MovieStub(channel)
@@ -16,6 +19,10 @@ def testMovie():
         get_movie_by_id(stub, movieid)
         print("-------------- GetListMovies --------------")
         get_list_movies(stub)
+        print("-------------- GetMovieByTitle --------------")
+        get_movie_by_title(stub, "The Martian")
+        print("-------------- CreateMovie --------------")
+        create_movie(stub)
 
 def get_movie_by_id(stub, id):
     movie = stub.GetMovieByID(id)
@@ -25,6 +32,18 @@ def get_list_movies(stub):
     allmovies = stub.GetListMovies(movie_pb2.Empty())
     for movie in allmovies:
         print("Movie called %s" % (movie.title))
+
+def get_movie_by_title(stub, movie_title_str):
+    movie_title = movie_pb2.MovieTitle(title=movie_title_str)
+    movie = stub.GetMovieByTitle(movie_title)
+    print(movie)
+
+def create_movie(stub):
+    randomUUID = str(uuid.uuid4())
+    randomRating = random.uniform(0, 10)
+    movie = stub.CreateMovie(movie_pb2.MovieData(title="new test film", director="new movie director", id=randomUUID, rating=randomRating))
+    print(movie)
+
 
 
 # Test functions of Showtime
@@ -47,7 +66,8 @@ def get_list_times(stub):
 def get_times_by_date(stub, date):
     time = stub.GetTimesByDate(showtime_pb2.Date(date=date))
     print(time)
-"""
+
+
 
 # Test functions of Booking
 
@@ -69,10 +89,9 @@ def get_bookings_user(stub):
     print(booking.userid)  # Too long with dates
 
 
-
 def run():
-    #testMovie()
-    #testShowtime()
+    testMovie()
+    testShowtime()
     testBooking()
 
 
