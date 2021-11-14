@@ -1,0 +1,18 @@
+type Query {
+    bookings_list: [Booking]
+    bookings_for_user(_userId: String!): Booking
+}
+
+type Mutation {
+    add_booking_for_user(_userId: String!, _date: String!, _movie: String!): Booking
+}
+
+type Booking {
+    userid: String!
+    dates: [Date]!
+}
+
+type Date {
+    date: String!
+    movies: [String]!
+}
