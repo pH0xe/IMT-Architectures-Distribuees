@@ -1,0 +1,9 @@
+type Query {
+    showtimes_list: [Showtime]
+    showtime_with_date(_date: String): Showtime
+}
+
+type Showtime {
+    date: String!
+    movies: [String!]!
+}
