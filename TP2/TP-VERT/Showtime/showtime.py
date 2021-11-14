@@ -9,7 +9,7 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
         with open('{}/databases/times.json'.format("."), "r") as jsf:
             self.times = json.load(jsf)["schedule"]
 
-    # Get all times in a list
+    # Fonction qui renvoi toutes le programations
     def GetListTimes(self, request, context):
         print("GetListTimes")
 
@@ -18,7 +18,8 @@ class ShowtimeServicer(showtime_pb2_grpc.ShowtimeServicer):
             #     yield showtime_pb2.TimesData(date=time["date"], movies=movie)
             yield showtime_pb2.TimesData(date=time["date"], movies=time["movies"])
 
-    # Get times for a specific date
+    # Fonction qui renvoie les programmation pour une journée donnée
+    # renvoi un objet vide en cas d'erreur
     def GetTimesByDate(self, request, context):
         print("GetTimesByDate")
         for time in self.times:

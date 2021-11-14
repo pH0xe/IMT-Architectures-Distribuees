@@ -29,7 +29,7 @@ def index():
     return make_response("<h1 style='color:blue'>Welcome to the User service!</h1>", 200)
 
 
-# get all users
+# Fonction qui renvoie tout les user de la bdd
 @app.route("/users", methods=['GET'])
 def get_json():
     print("===== get_json =====")
@@ -37,7 +37,8 @@ def get_json():
     return make_response(jsonify(users), 200)
 
 
-# get a user with an id
+# Fonction permettant d'obtenir tout les info d'un utilisateur grace a sont id (passé dans le path)
+# En cas d'erreur renvoi un message d'erreur et une erreur 400
 @app.route("/users/<user_id>", methods=['GET'])
 def get_user(user_id):
     print("===== get_user =====")
@@ -48,6 +49,7 @@ def get_user(user_id):
     return make_response("This user id doesn't exist", 400)
 
 
+# Fonction permettant de tester qu'un utilisateur exsite
 def idAlreadyExist(id):
     for user in users:
         if user["id"] == id:
@@ -55,7 +57,8 @@ def idAlreadyExist(id):
     return False
 
 
-# add a user
+# Fonction permettant l'ajout d'un user dans la bdd
+# renvoie le user ajouter en cas de succèes, un message d'erreur sinon
 @app.route("/users", methods=['POST'])
 def add_user():
     print("===== add_user =====")
@@ -72,11 +75,13 @@ def add_user():
     return make_response(jsonify(user), 200)
 
 
-# delete a user with an id
+# Fonction permettant de supprimer un user grace a sont id (passé dans le path)
 @app.route("/users/<user_id>", methods=['DELETE'])
 def delete_user(user_id):
     print("===== delete_user =====")
 
+    # recherche de l'utilisateur
+    # Amelioration possible: fusion de la methode recherche et existance, utilisé dans plusieurs fonctions
     for user in users:
         if user["id"] == str(user_id):
             users.remove(user)
@@ -84,14 +89,16 @@ def delete_user(user_id):
     return make_response("This user id doesn't exist", 400)
 
 
-# get all watched movie by a user
+# Fonction permettant d'obtenir tout les films vu par un utilisateur
 @app.route("/watched_movies/<user_id>", methods=['GET'])
 def get_watched_movies(user_id):
     print("===== get_watched_movies =====")
 
+    # recherche de l'utilisateur pour verifier sont existance
     if not idAlreadyExist(user_id):
         return make_response("This user id doesn't exist", 400)
 
+    # requete sur movie et booking pour obtenir la liste des film et les id des film vu
     watched_movies = []
     with grpc.insecure_channel('localhost:' + str(MOVIE_PORT)) as channelMovie:
         stub = movie_pb2_grpc.MovieStub(channelMovie)
@@ -102,9 +109,12 @@ def get_watched_movies(user_id):
             userId = booking_pb2.UserIDBooking(userid=user_id)
             booking = stub.getBookingForUser(userId)
 
+            # On enregistre tout les id des films vu dans une premiere liste
             for date in booking.dates:
                 for mov in date.movies:
                     watched_movies.append(mov)
+            # pour chaque film on regarde si il fait partie des film vu.
+            # Si il en fait partie on convertie l'objet rpc en Dict python et on l'ajoute a la liste de resultat
             res = []
             for movie in movies:
                 if movie.id in watched_movies:

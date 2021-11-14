@@ -16,6 +16,7 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
         with open('{}/databases/movies.json'.format("."), "r") as jsf:
             self.db = json.load(jsf)["movies"]
 
+    # Fonction qui renvoie les infos d'un film par sont id
     def GetMovieByID(self, request, context):
         print("===== GetMovieById =====")
 
@@ -26,12 +27,15 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
                                            id=movie['id'])
         return movie_pb2.MovieData(title="", rating="", director="", id="")
 
+    # Fonction qui renvoi la liste complete des films
     def GetListMovies(self, request, context):
         print("===== GetListMovie =====")
 
         for movie in self.db:
             yield movie_pb2.MovieData(title=movie['title'], rating=movie['rating'], director=movie['director'], id=movie['id'])
 
+    # Fonction qui renvoi les info d'un film.
+    # Cherche ce film grace a son titre
     def GetMovieByTitle(self, request, context):
         print("===== GetMovieByTitle =====")
 
@@ -41,9 +45,14 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
                 return movie_pb2.MovieData(title=movie['title'], rating=movie['rating'], director=movie['director'], id=movie['id'])
         return movie_pb2.MovieData()
 
+    # Fonction pour créer un nouveau film dans la bdd
+    # Renvoi le film ajouter en cas de succèe
+    # Renvoi un objet vide si erreur
     def CreateMovie(self, request, context):
         print("===== CreateMovie =====")
 
+        # on verifie que le film existe ou non
+        # Si il existe on fini la fonction et on renvoi un object vide
         movie = self.findMovieById(request.id)
         if movie is not None:
             print('return here movie exist')
@@ -53,6 +62,8 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
         self.db.append(newMovie)
         return movie_pb2.MovieData(title=request.title, rating=request.rating, director=request.director, id=request.id)
 
+    # Fonction de mise ajours de la note d'un film
+    # Renvoi le film mis a jour ou un objet vide si le film n'est pas trouvé
     def UpdateMovieRating(self, request, context):
         print("===== UpdateMovieRating =====")
 
@@ -65,6 +76,9 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
         movie['id'] = rating
         return movie_pb2.MovieData(title=movie['title'], rating=movie['rating'], director=movie['director'], id=movie['id'])
 
+    # Fonction de mise a jour d'un film
+    # Renvoie le film mis a jours en cas de succèes
+    # renvoie un objet vide si le film ,'est pas trouvé
     def UpdateMovie(self, request, context):
         print("===== UpdateMovie =====")
 
@@ -86,6 +100,9 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
 
         return movie_pb2.MovieData(title=movie['title'], rating=movie['rating'], director=movie['director'], id=movie['id'])
 
+    # Suppression d'un film
+    # Renvoie le film mis a jours en cas de succèes
+    # renvoie un objet vide si le film n'est pas trouvé
     def DeleteMovie(self, request, context):
         print("===== DeleteMovie =====")
 
@@ -95,6 +112,7 @@ class MovieServicer(movie_pb2_grpc.MovieServicer):
         self.db.remove(movie)
         return movie_pb2.MovieData(title=movie['title'], rating=movie['rating'], director=movie['director'], id=movie['id'])
 
+    # methode de recherche d'un film
     def findMovieById(self, id):
         print("===== findMovieById =====")
         for movie in self.db:

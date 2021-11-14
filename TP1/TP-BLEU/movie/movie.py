@@ -6,12 +6,15 @@ app = Flask(__name__)
 
 PORT = 3000
 HOST = '127.0.0.1'
+
+# Ajout de variable pour l'accé a l'API IMDB
 BASE_URL = 'https://imdb-api.com/fr/API/'
 TOKEN = '/k_km5ai6li'
 
 with open('{}/databases/movies.json'.format("."), "r") as jsf:
     moviesLocal = json.load(jsf)["movies"]
 
+# creation de l'url de base
 def construct_url(action):
     return BASE_URL + action + TOKEN
 
@@ -23,6 +26,7 @@ def home():
                          "<a href=\"./movies\">Liste des films<a>"
                          "", 200)
 
+# Methode generique de test des requete vers IMDB
 def is_request_error(req):
     if req.status_code != 200:
         return True, make_response(jsonify({ 'error': 'Unknow error'}), req.status_code)
@@ -31,7 +35,7 @@ def is_request_error(req):
         return True, make_response(jsonify({'errorMessage': req['errorMessage']}), 418)
     return False, None
 
-# get the complete json file
+# On recupere le top 200 des films sur IMDB
 @app.route("/movies", methods=['GET'])
 def get_movies():
     movies = requests.get(construct_url('Top250Movies'))
@@ -45,7 +49,7 @@ def get_movies():
     return make_response(jsonify(movies), 200)
 
 
-# get a movie info by its ID
+# Recherche des détatil d'un film sur IMDB avec sont ID
 @app.route("/movies/<movieid>", methods=['GET'])
 def get_movie_byid(movieid):
     url = construct_url('Title') + '/' + movieid
@@ -57,7 +61,8 @@ def get_movie_byid(movieid):
     return make_response(jsonify(movie), 200)
 
 
-# get a movie info by its name through a query
+# Recherche des films qui corresponde a un titre sur IMDB
+# Renvoie la liste des films + les liens pour accéder au detail de chaque films
 @app.route("/moviesbytitle", methods=['GET'])
 def get_movie_bytitle():
     found_movies = {}

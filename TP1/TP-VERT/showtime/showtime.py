@@ -14,13 +14,14 @@ with open('{}/databases/times.json'.format("."), "r") as jsf:
 def index():
   return make_response("<h1 style='color:blue'>Welcome to the Showtimes service!</h1>",200)
 
-# get all times
+# fonction qui renvoie toute les programations
 @app.route("/showtimes", methods=['GET'])
 def get_all():
   res = make_response(jsonify(times), 200)
   return res
 
-# get all times in a day
+# cherche et renvoie toute les programmation pour une journée donnée (passé dans le path)
+# en cas d'erreur renvoie un message d'erreur
 @app.route("/showtimes/<date>", methods=['GET'])
 def get_by_date(date):
 
